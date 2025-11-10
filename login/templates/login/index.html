@@ -13,17 +13,30 @@
   </div>
 {% endif %} {% endcomment %}
 
+
+
+{% comment %} CAMBIAR LOS INPUT ABAJO DE LOS TEXTOS NO AL LADO {% endcomment %}
+
+
 <div class="d-flex justify-content-center align-items-center vh-100">
   <div class="card p-4 shadow" style="width: 25rem;">
-    <img src="{% static 'images/logo.jpg' %}" class="card-img-top" alt="logo">
+    <img src="{% static 'images/logo.jpg' %}" class="card-img-top mb-3" alt="logo">
     <h3 class="text-center mb-3">Iniciar sesión</h3>
+
     <form method="POST">
       {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-primary w-100 mt-2">Ingresar</button>
-      <div class="text-center mt-3">
-        {% comment %} <a href="{% url 'recuperar' %}">¿Desea recuperar su contraseña?</a> {% endcomment %}
+
+      <div class="mb-3 text-start">
+        <label for="username" class="form-label">Nombre de usuario</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="Ingrese su usuario" required>
       </div>
+
+      <div class="mb-3 text-start">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Ingrese su contraseña" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-2">Ingresar</button>
     </form>
   </div>
 </div>
