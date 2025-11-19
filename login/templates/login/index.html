@@ -38,6 +38,13 @@
         <input type="password" id="password" name="password" class="form-control" placeholder="Ingrese su contraseña" required>
       </div>
 
+      <!-- Nueva seccion agregada -->
+      <div class="text-end mb-3">
+        <a href="{% url 'password_reset' %}" class="text-decoration-none small">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
+
       <button type="submit" class="btn btn-primary w-100 mt-2">Ingresar</button>
     </form>
   </div>
