@@ -127,6 +127,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Carpeta donde se guardarán los archivos subidos
+MEDIA_URL = '/media/'                     # URL pública para acceder a los archivos
+MEDIA_ROOT = BASE_DIR / 'media'           # Carpeta física dentro del proyecto
+
+
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

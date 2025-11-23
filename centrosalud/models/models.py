@@ -41,8 +41,11 @@ class FichaMedica(models.Model):
     alergias = models.TextField(null=True, blank=True)
     enfermedades_cronicas = models.TextField(null=True, blank=True)
     medicamentos_actuales = models.TextField(null=True, blank=True)
+    estado = models.CharField(max_length=20, default='TRATAMIENTO') #ALTA, TRATAMIENTO, PREOPERATORIO, POSTOPERATORIO, URGENCIA
+
     def __str__(self):
-        return f"Ficha Medica de {self.paciente.nombre} {self.paciente.apellido1}"
+        return f"Ficha Médica de {self.paciente.nombre} {self.paciente.apellido1} - Estado: {self.estado}"
+    
 
 
 class TratamientoMedico(models.Model):
@@ -55,6 +58,7 @@ class TratamientoMedico(models.Model):
 class AtencionMedica(models.Model):
     ficha_medica = models.ForeignKey(FichaMedica, on_delete=models.CASCADE, related_name="atenciones")
     medico_responsable = models.ForeignKey(User, on_delete=models.CASCADE)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE, null=True, blank=True)
 
     fecha_entrada = models.DateTimeField(default=timezone.now)
     fecha_salida = models.DateTimeField(null=True, blank=True)
