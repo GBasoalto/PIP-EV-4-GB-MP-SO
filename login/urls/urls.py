@@ -3,6 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import TemplateView
 from login.views import views
 from login.forms import CustomLoginForm
+from login.views.usuarios import ListaUsuariosView, EditarPerfilUsuarioView
 
 urlpatterns = [
     path('', LoginView.as_view(template_name='login/index.html', authentication_form=CustomLoginForm), name='login'),
@@ -13,5 +14,11 @@ urlpatterns = [
     path('password-reset/', views.PasswordResetRequestView.as_view(), name='password_reset'),
     path('password-reset/done/', TemplateView.as_view(template_name='login/password_reset_done.html'), name='password_reset_done'), 
     path('password-reset/confirm/<uuid:token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('password-reset/complete/', TemplateView.as_view(template_name='login/password_reset_complete.html'), name='password_reset_complete'), 
+    path('password-reset/complete/', TemplateView.as_view(template_name='login/password_reset_complete.html'), name='password_reset_complete'),
+
+    # Rutas de gestión de usuarios
+
+    path('usuarios/', ListaUsuariosView.as_view(), name='lista_usuarios'),
+    path('usuarios/<int:pk>/editar/', EditarPerfilUsuarioView.as_view(), name='editar_usuario'),
+
 ]

@@ -31,12 +31,14 @@ class PerfilUsuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
     tipo = models.CharField(max_length=20) #ADMIN, MEDICO, ENFERMERA, RECEPCIONISTA
     rut = models.CharField(max_length=12, unique=True, null=True, blank=True)
-    centro_salud = models.ForeignKey(CentroSalud, on_delete=models.SET_NULL, null=True, blank=True)
+    #PARA DESTINARLO A UN CENTRO DE SALUD ESPECIFICO
+    centro_salud = models.ForeignKey(CentroSalud, on_delete=models.SET_NULL, null=True, blank=True) 
     foto = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} ({self.tipo})"
 
+ 
 
 
 

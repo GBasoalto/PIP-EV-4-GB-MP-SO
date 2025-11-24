@@ -1,0 +1,72 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h2 class="mb-4">Usuarios del Sistema</h2>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Tipo</th>
+            <th>Centro de Salud</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for u in usuarios %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.perfil.tipo }}</td>
+            <td>{{ u.perfil.centro_salud }}</td>
+            <td>
+                <button class="btn btn-primary btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalEditar{{ u.id }}">
+                    Editar
+                </button>
+            </td>
+        </tr>
+
+        <!-- ====================== MODAL EDITAR USUARIO ====================== -->
+        <div class="modal fade" id="modalEditar{{ u.id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar {{ u.username }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <form action="{% url 'editar_usuario' u.id %}"
+                              method="post"
+                              enctype="multipart/form-data">
+
+                            {% csrf_token %}
+
+                            <!-- FORMULARIO DEL PERFIL -->
+                            {{ forms[u.id].as_p }}
+
+                            <button type="submit" class="btn btn-success w-100 mt-3">
+                                Guardar Cambios
+                            </button>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ================================================================== -->
+
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
