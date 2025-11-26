@@ -1,20 +1,23 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Salud Maule</title>
+    <title>{{title|default:"Dashboard Salud Maule"}}</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- CSS personalizado -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
+
 <body>
     <div class="d-flex">
         <!-- Sidebar -->
@@ -23,17 +26,58 @@
             <p class="text-light">Usuario: {{ user.username }}</p>
             <hr class="text-light">
             <ul>
-                <li><a href="{% url 'lista_usuarios' %}"><i class="bi bi-people"></i> Usuarios</a></li>
-                <li class="active"><a href="#"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-                <li><a href="#"><i class="bi bi-people"></i> Usuarios</a></li>
-                <li><a href="#"><i class="bi bi-person-lines-fill"></i> Pacientes</a></li>
-                <li><a href="#"><i class="bi bi-file-medical"></i> Fichas Médicas</a></li>
-                <li><a href="#"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+
+                {% if user.perfil.tipo == 'MEDICO' %}
+                <li class="{% if 'doctor' in request.path %}active{% endif %}">
+                    <a href="{% url 'doctor_patient_list' %}"><i class="bi bi-person-lines-fill"></i> Mis Pacientes</a>
+                </li>
+                {% endif %}
+
+                {% if user.perfil.tipo == 'INGRESO' %}
+                <li class="{% if 'search' in request.path %}active{% endif %}">
+                    <a href="{% url 'search_patient' %}"><i class="bi bi-search"></i> Buscar Paciente</a>
+                </li>
+                <li class="{% if 'admission' in request.path and 'search' not in request.path %}active{% endif %}">
+                    <a href="{% url 'admission_dashboard' %}"><i class="bi bi-clipboard-plus"></i> Dashboard Ingreso</a>
+                </li>
+                {% endif %}
+
+                {% if user.perfil.tipo == 'DIRECTOR' %}
+                <li class="{% if 'director' in request.path %}active{% endif %}">
+                    <a href="{% url 'director_dashboard' %}"><i class="bi bi-bar-chart"></i> Estadísticas</a>
+                </li>
+                {% endif %}
+
+                {% if user.is_superuser %}
+                <li class="{% if 'usuarios' in request.path %}active{% endif %}">
+                    <a href="{% url 'lista_usuarios' %}"><i class="bi bi-people"></i> Usuarios</a>
+                </li>
+                {% endif %}
+
+                <li>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link text-start"
+                            style="text-decoration: none; color: #f8f9fa; padding: 10px 15px; width: 100%;"><i
+                                class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
+                    </form>
+                </li>
             </ul>
         </div>
 
         <!-- Main content -->
         <div class="flex-grow-1 p-4">
+            {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             {% block content %}
             {% endblock %}
         </div>
@@ -42,4 +86,5 @@
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

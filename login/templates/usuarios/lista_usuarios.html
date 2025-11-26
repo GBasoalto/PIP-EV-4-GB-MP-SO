@@ -1,5 +1,6 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block content %}
 
@@ -24,9 +25,7 @@
             <td>{{ u.perfil.tipo }}</td>
             <td>{{ u.perfil.centro_salud }}</td>
             <td>
-                <button class="btn btn-primary btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalEditar{{ u.id }}">
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar{{ u.id }}">
                     Editar
                 </button>
             </td>
@@ -44,14 +43,16 @@
 
                     <div class="modal-body">
 
-                        <form action="{% url 'editar_usuario' u.id %}"
-                              method="post"
-                              enctype="multipart/form-data">
+                        <form action="{% url 'editar_usuario' u.id %}" method="post" enctype="multipart/form-data">
+
+
 
                             {% csrf_token %}
 
                             <!-- FORMULARIO DEL PERFIL -->
-                            {{ forms[u.id].as_p }}
+                            {% with form=forms|get_item:u.id %}
+                            {{ form.as_p }}
+                            {% endwith %}
 
                             <button type="submit" class="btn btn-success w-100 mt-3">
                                 Guardar Cambios

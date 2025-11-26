@@ -1,0 +1,32 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Dashboard Director</h2>
+    <h3>Atenciones Activas</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Paciente</th>
+                <th>Médico Responsable</th>
+                <th>Fecha Entrada</th>
+                <th>Área</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atencion in atenciones %}
+            <tr>
+                <td>{{ atencion.ficha_medica.paciente.nombre }} {{ atencion.ficha_medica.paciente.apellido1 }}</td>
+                <td>{{ atencion.medico_responsable.username }}</td>
+                <td>{{ atencion.fecha_entrada }}</td>
+                <td>{{ atencion.area.nombre }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay atenciones registradas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

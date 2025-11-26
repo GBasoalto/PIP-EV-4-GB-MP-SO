@@ -1,0 +1,15 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Registrar Ingreso</h2>
+    <p>Paciente: <strong>{{ paciente.nombre }} {{ paciente.apellido1 }}</strong> (RUT: {{ paciente.rut }})</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Registrar Ingreso</button>
+        <a href="{% url 'admission_dashboard' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

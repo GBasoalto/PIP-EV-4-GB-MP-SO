@@ -1,0 +1,19 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Panel de Admisión</h2>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ingresar Paciente</h5>
+                    <p class="card-text">Buscar paciente por RUT, si no existe ingresar nuevo paciente y procede a la
+                        atencion.</p>
+                    <a href="{% url 'search_patient' %}" class="btn btn-primary btn-lg">Ingresar Paciente</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

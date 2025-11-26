@@ -29,7 +29,14 @@ class PasswordResetToken(models.Model):
 #modelos para agregar tipo a los usuarios de auth    
 class PerfilUsuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
-    tipo = models.CharField(max_length=20) #ADMIN, MEDICO, ENFERMERA, RECEPCIONISTA
+    TIPOS_USUARIO = [
+        ('MEDICO', 'Médico'),
+        ('DIRECTOR', 'Director'),
+        ('INGRESO', 'Personal de Ingreso'),
+        ('ENFERMERA', 'Enfermera'),
+        ('RECEPCIONISTA', 'Recepcionista'),
+    ]
+    tipo = models.CharField(max_length=20, choices=TIPOS_USUARIO)
     rut = models.CharField(max_length=12, unique=True, null=True, blank=True)
     #PARA DESTINARLO A UN CENTRO DE SALUD ESPECIFICO
     centro_salud = models.ForeignKey(CentroSalud, on_delete=models.SET_NULL, null=True, blank=True) 

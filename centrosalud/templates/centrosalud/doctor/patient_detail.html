@@ -1,0 +1,80 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle del Paciente: {{ paciente.nombre }} {{ paciente.apellido1 }}</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">Información General</div>
+        <div class="card-body">
+            <p><strong>RUT:</strong> {{ paciente.rut }}</p>
+            <p><strong>Fecha de Nacimiento:</strong> {{ paciente.fecha_nacimiento|date:"d/m/Y" }}</p>
+            <p><strong>Teléfono:</strong> {{ paciente.telefono }}</p>
+            <p><strong>Dirección:</strong> {{ paciente.direccion }}</p>
+            <p><strong>Estado:</strong>
+                {% if ficha.estado == 'EN_ALTA' %}
+                <span class="badge bg-success">En Alta</span>
+                {% elif ficha.estado == 'EN_TRATAMIENTO' %}
+                <span class="badge bg-info">En Tratamiento</span>
+                {% else %}
+                <span class="badge bg-warning">{{ ficha.get_estado_display }}</span>
+                {% endif %}
+            </p>
+            <a href="{% url 'update_patient_status' paciente.pk %}" class="btn btn-warning btn-sm">Actualizar Estado</a>
+        </div>
+    </div>
+
+    {% if ficha.estado == 'EN_TRATAMIENTO' %}
+    {% with atencion_activa=atenciones.first %}
+    {% if atencion_activa %}
+    <div class="card mb-4 border-info">
+        <div class="card-header bg-info text-white">Tratamiento Actual</div>
+        <div class="card-body">
+            <p><strong>Motivo de Ingreso:</strong> {{ atencion_activa.motivo_consulta|default:"No especificado" }}</p>
+            <p><strong>Área/Sector:</strong> {{ atencion_activa.area|default:"No asignada" }}</p>
+            <p><strong>Médico Responsable:</strong> {{ atencion_activa.medico_responsable.username }}</p>
+            <p><strong>RUT Médico:</strong> {{ atencion_activa.medico_responsable.perfil.rut|default:"-" }}</p>
+            <p><strong>Diagnóstico:</strong> {{ atencion_activa.diagnostico|default:"Pendiente" }}</p>
+            <p><strong>Tratamiento:</strong> {{ atencion_activa.tratamiento|default:"Pendiente" }}</p>
+            <p><strong>Fecha de Ingreso:</strong> {{ atencion_activa.fecha_entrada|date:"d/m/Y H:i" }}</p>
+        </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% endif %}
+
+    <h3>Historial de Atenciones</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Médico</th>
+                <th>RUT</th>
+                <th>Área</th>
+                <th>Diagnóstico</th>
+                <th>Tratamiento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atencion in atenciones %}
+            <tr>
+                <td>{{ atencion.fecha_entrada|date:"d/m/Y H:i" }}</td>
+                <td>{{ atencion.medico_responsable.username }}</td>
+                <td>{{ atencion.medico_responsable.perfil.rut|default:"-" }}</td>
+                <td>{{ atencion.area|default:"-" }}</td>
+                <td>{{ atencion.diagnostico|default:"-" }}</td>
+                <td>{{ atencion.tratamiento|default:"-" }}</td>
+                <td><a href="{% url 'update_atencion' atencion.pk %}" class="btn btn-sm btn-primary">Actualizar</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No hay atenciones</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'doctor_patient_list' %}" class="btn btn-secondary">Volver a Lista de Pacientes</a>
+</div>
+{% endblock %}

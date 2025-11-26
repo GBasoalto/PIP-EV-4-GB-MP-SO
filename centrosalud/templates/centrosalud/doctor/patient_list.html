@@ -1,0 +1,29 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Pacientes</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>RUT</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+            <tr>
+                <td>{{ paciente.nombre }} {{ paciente.apellido1 }}</td>
+                <td>{{ paciente.rut }}</td>
+                <td>{{ paciente.ficha_medica.get_estado_display }}</td>
+                <td>
+                    <a href="{% url 'patient_detail' paciente.pk %}" class="btn btn-primary btn-sm">Ver Detalles</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
