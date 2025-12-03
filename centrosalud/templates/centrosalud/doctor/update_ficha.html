@@ -1,0 +1,148 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-file-medical me-2"></i>Actualizar Ficha Médica</h2>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Paciente:</strong> 
+        {{ object.paciente.nombre }} {{ object.paciente.apellido1 }} {{ object.paciente.apellido2 }}
+        <br>
+        <strong>RUT:</strong> {{ object.paciente.rut }}
+    </div>
+
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <strong>Error:</strong> Por favor corrija los errores.
+        {{ form.errors }}
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-pencil-square me-2"></i>Información de la Ficha Médica
+        </div>
+
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- ANTECEDENTES PERSONALES -->
+                <div class="mb-3">
+                    <label for="{{ form.antecedentes_personales.id_for_label }}" class="form-label fw-bold">
+                        <i class="bi bi-clipboard-pulse me-1"></i>Antecedentes Personales:
+                    </label>
+
+                    <textarea 
+                        name="{{ form.antecedentes_personales.name }}" 
+                        id="{{ form.antecedentes_personales.id_for_label }}"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Ej: Hipertensión arterial desde hace 10 años">{{ form.antecedentes_personales.value|default_if_none:"" }}</textarea>
+
+                    <small class="form-text text-muted">Historial médico personal del paciente</small>
+
+                    {% if form.antecedentes_personales.errors %}
+                    <div class="invalid-feedback d-block">{{ form.antecedentes_personales.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- ANTECEDENTES FAMILIARES -->
+                <div class="mb-3">
+                    <label for="{{ form.antecedentes_familiares.id_for_label }}" class="form-label fw-bold">
+                        <i class="bi bi-people me-1"></i>Antecedentes Familiares:
+                    </label>
+
+                    <textarea 
+                        name="{{ form.antecedentes_familiares.name }}" 
+                        id="{{ form.antecedentes_familiares.id_for_label }}"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Ej: Madre con diabetes gestacional">{{ form.antecedentes_familiares.value|default_if_none:"" }}</textarea>
+
+                    <small class="form-text text-muted">Historial médico familiar relevante</small>
+
+                    {% if form.antecedentes_familiares.errors %}
+                    <div class="invalid-feedback d-block">{{ form.antecedentes_familiares.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- ALERGIAS -->
+                <div class="mb-3">
+                    <label for="{{ form.alergias.id_for_label }}" class="form-label fw-bold">
+                        <i class="bi bi-exclamation-triangle me-1"></i>Alergias:
+                    </label>
+
+                    <textarea 
+                        name="{{ form.alergias.name }}" 
+                        id="{{ form.alergias.id_for_label }}"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Ej: Penicilina, Látex">{{ form.alergias.value|default_if_none:"" }}</textarea>
+
+                    <small class="form-text text-muted">Alergias conocidas del paciente</small>
+
+                    {% if form.alergias.errors %}
+                    <div class="invalid-feedback d-block">{{ form.alergias.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- ENFERMEDADES CRÓNICAS -->
+                <div class="mb-3">
+                    <label for="{{ form.enfermedades_cronicas.id_for_label }}" class="form-label fw-bold">
+                        <i class="bi bi-heart me-1"></i>Enfermedades Crónicas:
+                    </label>
+
+                    <textarea 
+                        name="{{ form.enfermedades_cronicas.name }}" 
+                        id="{{ form.enfermedades_cronicas.id_for_label }}"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Ej: Diabetes tipo 2, Hipertensión">{{ form.enfermedades_cronicas.value|default_if_none:"" }}</textarea>
+
+                    <small class="form-text text-muted">Enfermedades crónicas diagnosticadas</small>
+
+                    {% if form.enfermedades_cronicas.errors %}
+                    <div class="invalid-feedback d-block">{{ form.enfermedades_cronicas.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- MEDICAMENTOS ACTUALES -->
+                <div class="mb-3">
+                    <label for="{{ form.medicamentos_actuales.id_for_label }}" class="form-label fw-bold">
+                        <i class="bi bi-capsule me-1"></i>Medicamentos Actuales:
+                    </label>
+
+                    <textarea 
+                        name="{{ form.medicamentos_actuales.name }}" 
+                        id="{{ form.medicamentos_actuales.id_for_label }}"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Ej: Metformina 850mg c/12hrs, Enalapril 10mg c/24hrs">{{ form.medicamentos_actuales.value|default_if_none:"" }}</textarea>
+
+                    <small class="form-text text-muted">Medicamentos que el paciente está tomando actualmente</small>
+
+                    {% if form.medicamentos_actuales.errors %}
+                    <div class="invalid-feedback d-block">{{ form.medicamentos_actuales.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i>Guardar Cambios
+                    </button>
+
+                    <a href="{% url 'patient_detail' object.paciente.pk %}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

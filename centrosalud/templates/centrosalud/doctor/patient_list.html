@@ -1,29 +1,68 @@
 {% extends 'dashboard/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Lista de Pacientes</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>RUT</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for paciente in pacientes %}
-            <tr>
-                <td>{{ paciente.nombre }} {{ paciente.apellido1 }}</td>
-                <td>{{ paciente.rut }}</td>
-                <td>{{ paciente.ficha_medica.get_estado_display }}</td>
-                <td>
-                    <a href="{% url 'patient_detail' paciente.pk %}" class="btn btn-primary btn-sm">Ver Detalles</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-person-lines-fill me-2"></i>Lista de Pacientes</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-list-ul me-2"></i>Pacientes Registrados
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th><i class="bi bi-person me-1"></i>Nombre</th>
+                            <th><i class="bi bi-card-text me-1"></i>RUT</th>
+                            <th><i class="bi bi-heart-pulse me-1"></i>Estado</th>
+                            <th class="text-center"><i class="bi bi-gear me-1"></i>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paciente in pacientes %}
+                        <tr>
+                            <td class="fw-medium">{{ paciente.nombre }} {{ paciente.apellido1 }}</td>
+                            <td>{{ paciente.rut }}</td>
+                            <td>
+                                {% if paciente.ficha_medica %}
+                                {% if paciente.ficha_medica.estado == 'EN_ALTA' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>En Alta</span>
+                                {% elif paciente.ficha_medica.estado == 'EN_TRATAMIENTO' %}
+                                <span class="badge bg-info"><i class="bi bi-activity me-1"></i>En Tratamiento</span>
+                                {% elif paciente.ficha_medica.estado == 'PRE_OPERATORIO' %}
+                                <span class="badge bg-warning"><i class="bi bi-clock-history me-1"></i>Pre
+                                    Operatorio</span>
+                                {% elif paciente.ficha_medica.estado == 'POST_OPERATORIO' %}
+                                <span class="badge bg-primary"><i class="bi bi-bandaid me-1"></i>Post Operatorio</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ paciente.ficha_medica.get_estado_display }}</span>
+                                {% endif %}
+                                {% else %}
+                                <span class="badge bg-secondary"><i class="bi bi-question-circle me-1"></i>Sin
+                                    Ficha</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'patient_detail' paciente.pk %}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-eye me-1"></i>Ver Detalles
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                No hay pacientes registrados
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

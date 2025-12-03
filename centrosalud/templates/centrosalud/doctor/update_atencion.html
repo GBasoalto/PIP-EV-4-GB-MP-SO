@@ -1,34 +1,115 @@
 {% extends 'dashboard/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Actualizar Información Médica</h2>
-    <p>Paciente: <strong>{{ object.ficha_medica.paciente.nombre }} {{ object.ficha_medica.paciente.apellido1 }}</strong>
-    </p>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-clipboard2-pulse me-2"></i>Actualizar Información Médica</h2>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Paciente:</strong> 
+        {{ object.ficha_medica.paciente.nombre }} {{ object.ficha_medica.paciente.apellido1 }}
+    </div>
 
     {% if form.errors %}
-    <div class="alert alert-danger">{{ form.errors }}</div>
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <strong>Error:</strong> Por favor corrija los errores.
+        {{ form.errors }}
+    </div>
     {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label>Diagnóstico:</label>
-            {{ form.diagnostico }}
-            <small class="form-text text-muted">Agregue o actualice el diagnóstico del paciente</small>
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-pencil-square me-2"></i>Actualizar Atención
         </div>
-        <div class="mb-3">
-            <label>Tratamiento:</label>
-            {{ form.tratamiento }}
-            <small class="form-text text-muted">Indique el tratamiento prescrito</small>
+
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- DIAGNÓSTICO -->
+                <div class="mb-3">
+                    <label for="{{ form.diagnostico.id_for_label }}" class="form-label fw-bold">
+                        <i class="bi bi-clipboard-check me-1"></i>Diagnóstico:
+                    </label>
+
+                    <textarea 
+                        name="{{ form.diagnostico.name }}" 
+                        id="{{ form.diagnostico.id_for_label }}"
+                        class="form-control"
+                        rows="4">{{ form.diagnostico.value|default_if_none:"" }}</textarea>
+
+                    <small class="form-text text-muted">Agregue o actualice el diagnóstico del paciente</small>
+
+                    {% if form.diagnostico.errors %}
+                    <div class="invalid-feedback d-block">{{ form.diagnostico.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- TRATAMIENTO -->
+                <div class="mb-3">
+                    <label for="{{ form.tratamiento.id_for_label }}" class="form-label fw-bold">
+                        <i class="bi bi-prescription2 me-1"></i>Tratamiento:
+                    </label>
+
+                    <textarea 
+                        name="{{ form.tratamiento.name }}" 
+                        id="{{ form.tratamiento.id_for_label }}"
+                        class="form-control"
+                        rows="4">{{ form.tratamiento.value|default_if_none:"" }}</textarea>
+
+                    <small class="form-text text-muted">Indique el tratamiento prescrito</small>
+
+                    {% if form.tratamiento.errors %}
+                    <div class="invalid-feedback d-block">{{ form.tratamiento.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- ÁREA -->
+                <div class="mb-3">
+                    <label for="{{ form.area.id_for_label }}" class="form-label fw-bold">
+                        <i class="bi bi-building me-1"></i>Área:
+                    </label>
+
+                    <select 
+                        name="{{ form.area.name }}" 
+                        id="{{ form.area.id_for_label }}" 
+                        class="form-select">
+
+                        <option value="">---------</option>
+
+                        {% for value, label in form.area.field.choices %}
+                            {% if value %}
+                            <option value="{{ value }}" 
+                                {% if form.area.value|stringformat:"s" == value|stringformat:"s" %}
+                                    selected
+                                {% endif %}
+                            >{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+
+                    <small class="form-text text-muted">Cambiar solo si el paciente se traslada a otra área</small>
+
+                    {% if form.area.errors %}
+                    <div class="invalid-feedback d-block">{{ form.area.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i>Guardar Cambios
+                    </button>
+
+                    <a href="{% url 'patient_detail' object.ficha_medica.paciente.pk %}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </a>
+                </div>
+
+            </form>
         </div>
-        <div class="mb-3">
-            <label>Área:</label>
-            {{ form.area }}
-            <small class="form-text text-muted">Cambiar solo si el paciente se traslada a otra área</small>
-        </div>
-        <button type="submit" class="btn btn-success">Guardar Cambios</button>
-        <a href="{% url 'patient_detail' object.ficha_medica.paciente.pk %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+    </div>
 </div>
 {% endblock %}

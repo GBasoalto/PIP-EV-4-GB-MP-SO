@@ -1,79 +1,163 @@
 {% extends 'dashboard/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Nuevo Paciente - RUT: {{ rut }}</h2>
-    <p>Complete los datos para crear el registro e ingresar al paciente.</p>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-person-plus me-2"></i>Nuevo Paciente</h2>
+        <span class="badge bg-info fs-6">RUT: {{ rut }}</span>
+    </div>
+
     {% if form.errors %}
-    <div class="alert alert-danger">{{ form.errors }}</div>
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <strong>Error:</strong> Por favor corrija los errores a continuación.
+    </div>
     {% endif %}
+
     <form method="post">
         {% csrf_token %}
-        <h4>Datos del Paciente</h4>
-        <div class="mb-3">
-            {{ form.nombre.label_tag }}
-            {{ form.nombre }}
-            {% if form.nombre.errors %}
-            <div class="text-danger">{{ form.nombre.errors }}</div>
-            {% endif %}
+
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-person-vcard me-2"></i>Datos del Paciente
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.nombre.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-person me-1"></i>{{ form.nombre.label }}
+                        </label>
+                        <input type="text" name="{{ form.nombre.name }}" class="form-control"
+                            id="{{ form.nombre.id_for_label }}" value="{{ form.nombre.value|default:'' }}" required>
+                        {% if form.nombre.errors %}
+                        <div class="invalid-feedback d-block">{{ form.nombre.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.apellido1.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-person me-1"></i>{{ form.apellido1.label }}
+                        </label>
+                        <input type="text" name="{{ form.apellido1.name }}" class="form-control"
+                            id="{{ form.apellido1.id_for_label }}" value="{{ form.apellido1.value|default:'' }}"
+                            required>
+                        {% if form.apellido1.errors %}
+                        <div class="invalid-feedback d-block">{{ form.apellido1.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.apellido2.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-person me-1"></i>{{ form.apellido2.label }}
+                        </label>
+                        <input type="text" name="{{ form.apellido2.name }}" class="form-control"
+                            id="{{ form.apellido2.id_for_label }}" value="{{ form.apellido2.value|default:'' }}">
+                        <small class="form-text text-muted">Opcional</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.fecha_nacimiento.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-calendar-event me-1"></i>{{ form.fecha_nacimiento.label }}
+                        </label>
+                        <input type="date" name="{{ form.fecha_nacimiento.name }}" class="form-control"
+                            id="{{ form.fecha_nacimiento.id_for_label }}"
+                            value="{{ form.fecha_nacimiento.value|default:'' }}" required>
+                        {% if form.fecha_nacimiento.errors %}
+                        <div class="invalid-feedback d-block">{{ form.fecha_nacimiento.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.telefono.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-telephone me-1"></i>{{ form.telefono.label }}
+                        </label>
+                        <input type="text" name="{{ form.telefono.name }}" class="form-control"
+                            id="{{ form.telefono.id_for_label }}" value="{{ form.telefono.value|default:'' }}" required>
+                        {% if form.telefono.errors %}
+                        <div class="invalid-feedback d-block">{{ form.telefono.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.direccion.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-geo-alt me-1"></i>{{ form.direccion.label }}
+                        </label>
+                        <textarea name="{{ form.direccion.name }}" class="form-control"
+                            id="{{ form.direccion.id_for_label }}" rows="2"
+                            required>{{ form.direccion.value|default:'' }}</textarea>
+                        {% if form.direccion.errors %}
+                        <div class="invalid-feedback d-block">{{ form.direccion.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            {{ form.apellido1.label_tag }}
-            {{ form.apellido1 }}
-            {% if form.apellido1.errors %}
-            <div class="text-danger">{{ form.apellido1.errors }}</div>
-            {% endif %}
+
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">
+                <i class="bi bi-clipboard2-pulse me-2"></i>Datos del Ingreso
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.area.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-building me-1"></i>{{ form.area.label }}
+                        </label>
+                        <select name="{{ form.area.name }}" class="form-select" id="{{ form.area.id_for_label }}"
+                            required>
+                            <option value="">Seleccione un área...</option>
+                            {% for value, label in form.area.field.choices %}
+                            {% if value %}
+                            <option value="{{ value }}">{{ label }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        {% if form.area.errors %}
+                        <div class="invalid-feedback d-block">{{ form.area.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.medico_responsable.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-person-badge me-1"></i>{{ form.medico_responsable.label }}
+                        </label>
+                        <select name="{{ form.medico_responsable.name }}" class="form-select"
+                            id="{{ form.medico_responsable.id_for_label }}" required>
+                            <option value="">Seleccione un médico...</option>
+                            {% for value, label in form.medico_responsable.field.choices %}
+                            {% if value %}
+                            <option value="{{ value }}">{{ label }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        {% if form.medico_responsable.errors %}
+                        <div class="invalid-feedback d-block">{{ form.medico_responsable.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label for="{{ form.motivo_consulta.id_for_label }}" class="form-label fw-bold">
+                            <i class="bi bi-chat-left-text me-1"></i>{{ form.motivo_consulta.label }}
+                        </label>
+                        <textarea name="{{ form.motivo_consulta.name }}" class="form-control"
+                            id="{{ form.motivo_consulta.id_for_label }}" rows="4"
+                            required>{{ form.motivo_consulta.value|default:'' }}</textarea>
+                        {% if form.motivo_consulta.errors %}
+                        <div class="invalid-feedback d-block">{{ form.motivo_consulta.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            {{ form.apellido2.label_tag }}
-            {{ form.apellido2 }}
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-check-circle me-1"></i>Crear Paciente e Ingresar
+            </button>
+            <a href="{% url 'admission_dashboard' %}" class="btn btn-secondary btn-lg">
+                <i class="bi bi-x-circle me-1"></i>Cancelar
+            </a>
         </div>
-        <div class="mb-3">
-            {{ form.fecha_nacimiento.label_tag }}
-            {{ form.fecha_nacimiento }}
-            <small>YYYY-MM-DD</small>
-            {% if form.fecha_nacimiento.errors %}
-            <div class="text-danger">{{ form.fecha_nacimiento.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.telefono.label_tag }}
-            {{ form.telefono }}
-            {% if form.telefono.errors %}
-            <div class="text-danger">{{ form.telefono.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.direccion.label_tag }}
-            {{ form.direccion }}
-            {% if form.direccion.errors %}
-            <div class="text-danger">{{ form.direccion.errors }}</div>
-            {% endif %}
-        </div>
-        <h4>Datos del Ingreso</h4>
-        <div class="mb-3">
-            {{ form.area.label_tag }}
-            {{ form.area }}
-            {% if form.area.errors %}
-            <div class="text-danger">{{ form.area.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.medico_responsable.label_tag }}
-            {{ form.medico_responsable }}
-            {% if form.medico_responsable.errors %}
-            <div class="text-danger">{{ form.medico_responsable.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.motivo_consulta.label_tag }}
-            {{ form.motivo_consulta }}
-            {% if form.motivo_consulta.errors %}
-            <div class="text-danger">{{ form.motivo_consulta.errors }}</div>
-            {% endif %}
-        </div>
-        <button type="submit" class="btn btn-success">Crear Paciente e Ingresar</button>
-        <a href="{% url 'admission_dashboard' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 {% endblock %}

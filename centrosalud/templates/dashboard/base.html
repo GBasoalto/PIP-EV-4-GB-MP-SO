@@ -16,15 +16,141 @@
     <!-- CSS personalizado -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #0d6efd 0%, #0a58ca 100%);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            min-width: 250px;
+        }
+        
+        .sidebar h4 {
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar ul li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar ul li a,
+        .sidebar ul li button {
+            color: #f8f9fa;
+            text-decoration: none;
+            padding: 12px 15px;
+            display: block;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar ul li a:hover,
+        .sidebar ul li button:hover {
+            background-color: rgba(255,255,255,0.15);
+            transform: translateX(5px);
+        }
+        
+        .sidebar ul li.active a {
+            background-color: rgba(255,255,255,0.25);
+            font-weight: 600;
+        }
+        
+        .sidebar ul li a i,
+        .sidebar ul li button i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+            border-radius: 12px 12px 0 0 !important;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: #495057;
+            background-color: #f8f9fa;
+        }
+        
+        .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 0.625rem 0.875rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        }
+        
+        .badge {
+            padding: 0.5em 0.75em;
+            font-weight: 500;
+            border-radius: 6px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar p-3">
-            <h4 class="text-light mb-3">Salud Maule</h4>
-            <p class="text-light">Usuario: {{ user.username }}</p>
-            <hr class="text-light">
+            <h4 class="text-light mb-3">
+                <i class="bi bi-hospital"></i> Salud Maule
+            </h4>
+            <p class="text-light mb-1"><small>Usuario:</small></p>
+            <p class="text-light fw-bold">{{ user.username }}</p>
+            {% if user.perfil.centro_salud %}
+            <p class="text-light mb-1"><small>Centro:</small></p>
+            <p class="text-light"><small>{{ user.perfil.centro_salud.nombre }}</small></p>
+            {% endif %}
+            <hr class="text-light opacity-50">
             <ul>
 
                 {% if user.perfil.tipo == 'MEDICO' %}
@@ -55,10 +181,10 @@
                 {% endif %}
 
                 <li>
-                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    <form action="{% url 'logout' %}" method="post" style="display: inline; width: 100%;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-link text-start"
-                            style="text-decoration: none; color: #f8f9fa; padding: 10px 15px; width: 100%;"><i
+                        <button type="submit" class="btn btn-link text-start w-100"
+                            style="text-decoration: none; color: #f8f9fa; padding: 12px 15px;"><i
                                 class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
                     </form>
                 </li>
@@ -66,11 +192,12 @@
         </div>
 
         <!-- Main content -->
-        <div class="flex-grow-1 p-4">
+        <div class="main-content">
             {% if messages %}
-            <div class="container mt-3">
+            <div class="mb-3">
                 {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -85,6 +212,9 @@
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}
+    {% endblock %}
 </body>
 
 </html>

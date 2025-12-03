@@ -1,16 +1,26 @@
 {% extends 'dashboard/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Panel de Admisión</h2>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Ingresar Paciente</h5>
-                    <p class="card-text">Buscar paciente por RUT, si no existe ingresar nuevo paciente y procede a la
-                        atencion.</p>
-                    <a href="{% url 'search_patient' %}" class="btn btn-primary btn-lg">Ingresar Paciente</a>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-clipboard-plus me-2"></i>Panel de Admisión</h2>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card text-center shadow-sm">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <i class="bi bi-person-plus-fill text-primary" style="font-size: 4rem;"></i>
+                    </div>
+                    <h3 class="card-title mb-3">Ingresar Paciente</h3>
+                    <p class="card-text text-muted mb-4">
+                        Buscar paciente por RUT. Si no existe, podrá ingresar un nuevo paciente y proceder a la
+                        atención.
+                    </p>
+                    <a href="{% url 'search_patient' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-search me-2"></i>Buscar Paciente
+                    </a>
                 </div>
             </div>
         </div>

@@ -81,9 +81,9 @@ def create_seed_data():
 
     # 5. Crear Usuarios
     usuarios_data = [
-        {"username": "manuel_medico", "first_name": "Manuel", "last_name": "Poblete", "rol": "MEDICO", "email": "manuel@cftsa.cl", "centro": cesfam},
+        {"username": "manuel_medico", "first_name": "Manuel", "last_name": "Poblete", "rol": "MEDICO", "email": "manuel@cftsa.cl", "centro": hospital_maule},
         {"username": "gonzalo_director", "first_name": "Gonzalo", "last_name": "Basoalto", "rol": "DIRECTOR", "email": "gonzalo@cftsa.cl", "centro": hospital_maule},
-        {"username": "alen_ingreso", "first_name": "Alen", "last_name": "Opazo", "rol": "INGRESO", "email": "alen@cftsa.cl", "centro": cesfam},
+        {"username": "alen_ingreso", "first_name": "Alen", "last_name": "Opazo", "rol": "INGRESO", "email": "alen@cftsa.cl", "centro": hospital_maule},
         {"username": "pedro_medico", "first_name": "Pedro", "last_name": "Sánchez", "rol": "MEDICO", "email": "pedro@cftsa.cl", "centro": hospital_maule},
     ]
 
@@ -92,7 +92,7 @@ def create_seed_data():
             user = User.objects.create_user(
                 username=data["username"],
                 email=data["email"],
-                password="password123",
+                password="12345678",
                 first_name=data["first_name"],
                 last_name=data["last_name"]
             )

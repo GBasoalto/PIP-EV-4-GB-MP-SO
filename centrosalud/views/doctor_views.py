@@ -23,7 +23,8 @@ class DoctorPatientListView(LoginRequiredMixin, DoctorRequiredMixin, ListView):
              # Logic to filter by center could be added here if Paciente had a direct link to CentroSalud
              # or via FichaMedica -> AtencionMedica -> Area -> CentroSalud
              pass
-        return Paciente.objects.all()
+        # Solo mostrar pacientes que tienen ficha médica
+        return Paciente.objects.filter(ficha_medica__isnull=False)
 
 class PatientDetailView(LoginRequiredMixin, DoctorRequiredMixin, DetailView):
     model = Paciente
@@ -32,8 +33,13 @@ class PatientDetailView(LoginRequiredMixin, DoctorRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['ficha'] = self.object.ficha_medica
-        context['atenciones'] = self.object.ficha_medica.atenciones.all().order_by('-fecha_entrada')
+        # Verificar si el paciente tiene ficha médica
+        if hasattr(self.object, 'ficha_medica'):
+            context['ficha'] = self.object.ficha_medica
+            context['atenciones'] = self.object.ficha_medica.atenciones.all().order_by('-fecha_entrada')
+        else:
+            context['ficha'] = None
+            context['atenciones'] = []
         return context
 
 class UpdateAtencionMedicaView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
@@ -55,5 +61,20 @@ class UpdatePatientStatusView(LoginRequiredMixin, DoctorRequiredMixin, UpdateVie
         paciente = get_object_or_404(Paciente, pk=self.kwargs['pk'])
         return paciente.ficha_medica
 
+    def get_success_url(self):
+        return reverse_lazy('patient_detail', kwargs={'pk': self.kwargs['pk']})
+
+
+class UpdateFichaMedicaView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
+    """Vista para actualizar la ficha médica completa del paciente"""
+    model = FichaMedica
+    fields = ['antecedentes_personales', 'antecedentes_familiares', 'alergias', 
+              'enfermedades_cronicas', 'medicamentos_actuales']
+    template_name = 'centrosalud/doctor/update_ficha.html'
+    
+    def get_object(self):
+        paciente = get_object_or_404(Paciente, pk=self.kwargs['pk'])
+        return paciente.ficha_medica
+    
     def get_success_url(self):
         return reverse_lazy('patient_detail', kwargs={'pk': self.kwargs['pk']})

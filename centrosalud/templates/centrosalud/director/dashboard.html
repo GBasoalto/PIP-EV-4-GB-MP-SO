@@ -1,32 +1,56 @@
 {% extends 'dashboard/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Dashboard Director</h2>
-    <h3>Atenciones Activas</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Paciente</th>
-                <th>Médico Responsable</th>
-                <th>Fecha Entrada</th>
-                <th>Área</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for atencion in atenciones %}
-            <tr>
-                <td>{{ atencion.ficha_medica.paciente.nombre }} {{ atencion.ficha_medica.paciente.apellido1 }}</td>
-                <td>{{ atencion.medico_responsable.username }}</td>
-                <td>{{ atencion.fecha_entrada }}</td>
-                <td>{{ atencion.area.nombre }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No hay atenciones registradas.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-bar-chart me-2"></i>Dashboard Director</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-activity me-2"></i>Atenciones Activas
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th><i class="bi bi-person me-1"></i>Paciente</th>
+                            <th><i class="bi bi-person-badge me-1"></i>Médico Responsable</th>
+                            <th><i class="bi bi-calendar-event me-1"></i>Fecha Entrada</th>
+                            <th><i class="bi bi-building me-1"></i>Área</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for atencion in atenciones %}
+                        <tr>
+                            <td class="fw-medium">
+                                <i class="bi bi-person-circle me-1 text-primary"></i>
+                                {{ atencion.ficha_medica.paciente.nombre }} {{ atencion.ficha_medica.paciente.apellido1
+                                }}
+                            </td>
+                            <td>{{
+                                atencion.medico_responsable.get_full_name|default:atencion.medico_responsable.username
+                                }}</td>
+                            <td>{{ atencion.fecha_entrada|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    <i class="bi bi-building me-1"></i>{{ atencion.area.nombre }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                No hay atenciones registradas
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

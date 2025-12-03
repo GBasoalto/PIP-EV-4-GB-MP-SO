@@ -11,6 +11,7 @@ urlpatterns = [
     path('doctor/patient/<int:pk>/', doctor_views.PatientDetailView.as_view(), name='patient_detail'),
     path('doctor/atencion/<int:pk>/update/', doctor_views.UpdateAtencionMedicaView.as_view(), name='update_atencion'),
     path('doctor/patient/<int:pk>/update-status/', doctor_views.UpdatePatientStatusView.as_view(), name='update_patient_status'),
+    path('doctor/patient/<int:pk>/update-ficha/', doctor_views.UpdateFichaMedicaView.as_view(), name='update_ficha'),
 
     # Director URLs
     path('director/dashboard/', director_views.DirectorDashboardView.as_view(), name='director_dashboard'),
